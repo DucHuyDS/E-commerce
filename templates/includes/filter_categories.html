@@ -1,0 +1,18 @@
+<section class="padding-top" style="background-color:white">
+    <div class="container">
+      <nav class="row gy-4 row-cols-xl-8 row-cols-sm-4 row-cols-3">
+        {% for category in categories %}
+        <div class="col" >
+          <a href="{{category.get_url}}" class="item-link text-center" >
+            <span class="icon mb-2 icon-md rounded" {% if request.path == category.get_url %} style="background-color:red"{% endif %}>
+              <img width="32" height="32" src="{{category.img.url}}">
+            </span>
+            <span class="text">{{category.category_name}} </span>
+          </a>
+        </div> <!-- col.// -->
+        {% endfor %}
+         <!-- col.// -->
+        <!-- col.// -->
+      </nav>
+    </div>
+  </section>

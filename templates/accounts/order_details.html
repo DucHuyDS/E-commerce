@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+{% block title %}Chi tiết đơn hàng{% endblock %}
+
+{% block content %}
+<div class="container"
+    style="margin: 0 auto;width: 50%;padding: 50px;background: #f1f1f1;margin-top: 50px;margin-bottom: 50px;">
+    <div class="row invoice row-printable">
+        <div class="col-md-12">
+            <!-- col-lg-12 start here -->
+            <div class="panel panel-default plain" id="dash_0">
+                <!-- Start .panel -->
+                <div class="panel-body p30">
+                    <div class="row">
+
+                        <!-- col-lg-6 end here -->
+                        <div class="col-lg-6">
+                            <!-- col-lg-6 start here -->
+                            <div class="invoice-from">
+                                <ul class="list-unstyled text-left">
+                                    <li><strong>Hóa đơn:</strong></li>
+                                    <li>Tên: {{contact.full_name}}</li>
+                                    <li>Địa chỉ: {{contact.address}}</li>
+                                    <li>Số điện thoại: {{contact.phone}}</li>
+
+                                </ul>
+                            </div>
+                        </div>
+                        <!-- col-lg-6 end here -->
+                        <div class="col-lg-12">
+                            <!-- col-lg-12 start here -->
+                            <div class="invoice-details mt25">
+                                <div class="well">
+                                    <ul class="list-unstyled mb0">
+                                        <li><strong>Mã thanh toán</strong> #{{contact.payment.payment_id}}</li>
+                                        <li><strong>Ngày Đặt:</strong> {{contact.payment.created_at}}</li>
+                                        <li><strong>Trạng thái:</strong> {{contact.payment.status}}</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="invoice-items">
+                                <div class="table-responsive" style="overflow: hidden; outline: none;" tabindex="0">
+                                    <table class="table table-bordered">
+                                        <thead>
+                                            <tr>
+                                                <th class="per70 text-center">Sản phẩm</th>
+                                                <th class="per5 text-center">Số lượng</th>
+                                                <th class="per25 text-center">Tổng</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in order %}
+                                            <tr>
+                                                <td>
+                                                   
+                                                    <div class="itemside me-lg-5">
+                                                        <div class="aside"><img src="{{item.product.img.url}}"
+                                                                class="img-sm border rounded"></div>
+                                                        <div class="info">
+                                                            <p href="{{item.product.img.url}}" class="title mb-1">
+                                                                {{item.product.product_name}}
+                                                            </p>
+                                                            {% for variation in item.variations.all %}
+                                                            <p class="text-muted small">
+                                                                {{variation.variation_caterogy|capfirst}}: {{variation.variation_value}}
+                                                            </p>
+
+
+
+                                                            {% endfor %}
+                                                        </div>
+                                                    </div>
+
+                                                </td>
+                                                <td class="text-center">{{item.quantity}}</td>
+                                                <td class="text-center">${{item.sub_total}}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Tạm tính:</th>
+                                                <th class="text-center">${{contact.payment.price}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Giảm giá:</th>
+                                                <th class="text-center">${{contact.payment.discount}}</th>
+                                            </tr>
+                                            <tr>
+                                                <th colspan="2" class="text-right">Thuế:</th>
+                                                <th class="text-center">${{contact.payment.tax}}</th>
+                                            </tr>
+
+                                            <tr>
+                                                <th colspan="2" class="text-right">Tổng tiền:</th>
+                                                <th class="text-center">${{contact.payment.total_price}}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="invoice-footer mt25">
+                                <p class="text-center">Cảm ơn vì đã mua sắm!</p>
+                            </div>
+                        </div>
+                        <!-- col-lg-12 end here -->
+                    </div>
+                    <!-- End .row -->
+                </div>
+            </div>
+            <!-- End .panel -->
+        </div>
+        <!-- col-lg-12 end here -->
+    </div>
+</div>
+{% endblock %}

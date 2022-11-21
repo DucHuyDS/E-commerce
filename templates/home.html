@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home {% endblock %}
+{% block content %}
+
+<!-- section-header end.// -->
+
+<!-- ================ SECTION INTRO ================ -->
+<section class="section-intro pt-3">
+    <div class="container">
+
+        <div class="row gx-3">
+            <!-- <main class="col-lg-12"> -->
+            <!-- <article class="" > -->
+                <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="true">
+                    <div class="carousel-indicators">
+                      <li type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                      <li type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></li>
+                      <li type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></li>
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="https://lzd-img-global.slatic.net/g/icms/images/ims-web/4d86671a-e9e3-445e-b59c-21dcd6c3782a.jpg_2200x2200q90.jpg_.webp" class="d-block w-100" alt="https://lzd-img-global.slatic.net/g/icms/images/ims-web/4d86671a-e9e3-445e-b59c-21dcd6c3782a.jpg_2200x2200q90.jpg_.webp">                  
+                      </div>
+                      <div class="carousel-item">
+                        <img src="https://lzd-img-global.slatic.net/g/icms/images/ims-web/a9d9d8bc-d65a-4591-bce9-09179a5fd34b.jpg_2200x2200q90.jpg_.webp" class="d-block w-100" alt="https://lzd-img-global.slatic.net/g/icms/images/ims-web/a9d9d8bc-d65a-4591-bce9-09179a5fd34b.jpg_2200x2200q90.jpg_.webp">                  
+                      </div>
+                      <div class="carousel-item">
+                        <img src="https://lzd-img-global.slatic.net/g/icms/images/ims-web/9738095e-34b1-4e72-ba62-c91ffa5cfb98.jpg_2200x2200q90.jpg_.webp" class="d-block w-100" alt="https://lzd-img-global.slatic.net/g/icms/images/ims-web/9738095e-34b1-4e72-ba62-c91ffa5cfb98.jpg_2200x2200q90.jpg_.webp">                  
+                      </div>
+                    </div>
+                
+                    <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </a>
+                   
+                    <a class="carousel-control-next" data-bs-target="#carouselExampleIndicators" role="button" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </a>
+                  </div>
+        
+
+        </div>
+        <!-- row //end -->
+
+    </div>
+    <!-- container end.// -->
+</section>
+<!-- ================ SECTION INTRO END.// ================ -->
+{% include 'includes/filter_categories.html' %}
+<!-- ================ SECTION CATEGORY ================ -->
+
+
+<!-- ================ SECTION CATEGORY END.// ================ -->
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="padding-y">
+    <div class="container">
+
+        <header class="section-heading">
+            <h3 class="section-title">Sản phẩm mới</h3>
+        </header>
+
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <figure class="card-product-grid">
+                    <a href="{{product.get_url}}" class="img-wrap rounded bg-gray-light">
+                        <span class="topbar"> <span class="badge bg-danger"> New </span> </span>
+                        <img height="250" class="mix-blend-multiply" src="{{product.img.url}}">
+                    </a>
+                    <figcaption class="pt-2">
+
+                        <strong class="price" style="color:orange">${{product.price}}</strong> <!-- price.// -->
+                        <a href="{{product.get_url}}" class="title text-truncate">{{product.product_name}}</a>
+                        <small class="text-muted">Thương hiệu: {{product.brand}}</small>
+                    </figcaption>
+                </figure>
+            </div> <!-- col end.// -->
+            {% endfor %}
+            <!-- col end.// -->
+        </div> <!-- row end.// -->
+
+    </div> <!-- container end.// -->
+</section>
+<!-- ================ SECTION PRODUCTS END.// ================ -->
+
+
+<!-- ================ SECTION FEATURE ================ -->
+<section>
+    <div class="container">
+        <article class="card p-4" style="background-color: rgb(26, 148, 255)">
+            <div class="row align-items-center">
+                <div class="col">
+                    <h4 class="mb-0 text-white">Khám phá tất cả sản phẩm trong cửa hàng</h4>
+                    <p class="mb-0 text-white-50">Những món đồ độc lạ</p>
+                </div>
+                <div class="col-auto"> <a class="btn btn-warning" href="/store/">Khám phá ngay</a> </div>
+            </div>
+        </article>
+    </div> <!-- container end.// -->
+</section>
+<!-- ================ SECTION FEATURE END.// ================ -->
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="padding-y">
+    <div class="container">
+
+        <header class="section-heading">
+            <h3 class="section-title">Giới thiệu</h3>
+        </header>
+
+        {% include 'includes/recommend.html' %}
+
+</section>
+<!-- ================ SECTION PRODUCTS END.// ================ -->
+<section class="section-intro pt-3">
+
+    <!-- container end.// -->
+</section>
+
+{% endblock %}

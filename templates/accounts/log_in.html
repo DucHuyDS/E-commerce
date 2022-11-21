@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Đăng nhập{% endblock %}
+
+{% block content %}
+<section class="padding-y bg-light" >
+    <div class="container" style="width: 50%;">
+        <div class="row gy-6" s>
+            <!-- col end.// -->
+            <aside class="" >
+                <!-- ==============COMPONENT LOGIN 3 ============== -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-4">Đăng nhập</h4>
+                        {% include 'includes/alerts.html' %}
+                        <form action="{% url 'log_in' %}" method="POST">
+                        {% csrf_token %}
+                            <div class="input-group mb-3"> <span class="input-group-text"> <i class="fa fa-user"></i>
+                                </span> <input type="email" class="form-control" placeholder="Email" name="email"> </div>
+                            <!-- input-group end.// -->
+                            <div class="input-group mb-3"> <span class="input-group-text"> <i class="fa fa-lock"></i>
+                                </span> <input type="password" class="form-control" placeholder="Mật khẩu" name="password"> </div>
+                            <!-- input-group end.// -->
+                            <div class="d-flex mb-3"> <label class="form-check me-auto"> <input class="form-check-input"
+                                        type="checkbox" value="" checked=""> <span class="form-check-label"> Ghi nhớ đăng nhập
+                                    </span> </label> <a href="{% url 'forgot_password' %}" class="text-decoration-none"
+                                    style="left: 0;">Quên mật khẩu</a> </div>
+                            <!-- col end.// --> <button  class="btn btn-primary w-100" type="submit">Đăng nhập</button>
+                          
+                            <p class="mb-0 mt-4 text-center">Không có tài khoản? <a href="{% url 'register' %}">Đăng ký</a></p>
+                        </form> <!-- form end.// -->
+                    </div> <!-- card-body end.// -->
+                </div> <!-- card end.// -->
+                <!-- ============== COMPONENT LOGIN 3 END.// ============== -->
+            </aside> <!-- col end.// -->
+        </div> <!-- row end.// --> <br><br>
+        <!-- row end.// -->
+    </div> <!-- container end.// -->
+</section>
+{% endblock %}

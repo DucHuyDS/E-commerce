@@ -1,0 +1,295 @@
+{% extends 'base.html' %}
+{% block title %}Thanh toán{% endblock %}
+{% block content %}
+<section class="padding-y bg-light">
+    <div class="container">
+
+
+        <!-- ====================== COMPONENT 2 CART+SUMMARY ====================== -->
+
+        <div class="row">
+            <div class="col-lg-9">
+
+                <div class="card">
+                    <div class="card-body">
+
+                        <h5 class="card-title mb-4">Được giao tới</h5>
+                        <article class="row gy-3 mb-4">
+                            <div class="col-lg-6">
+                                <div class="itemside me-lg-5">
+                                    <div class="info" style="font-size:large">
+                                        <p>{{user.full_name}}: {{user.phone}}</p>
+                                        
+                                        {% if user_profile.address %}
+                                        <p>
+                                        Địa chỉ: {{user_profile.address}}   <a href="#" data-toggle="modal" data-target="#exampleModal" style="color:red">Thay đổi</a>
+                                        </p>
+                                       
+                                        {% else %}
+                                        <p style="color:red"><small>
+                                         Bạn cần thêm  <a href="#" data-toggle="modal" data-target="#exampleModal"> địa chỉ </a>để tiếp tục thanh toán</small>
+                                        </p>
+                                        
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group input-spinner">
+
+
+
+
+                                </div> <!-- input-group.// -->
+                            </div>
+
+
+                        </article> <!-- row.// -->
+
+
+
+
+
+
+
+
+                    </div> <!-- card-body .// -->
+
+                </div>
+                <div class="card">
+                    <div class="card-body">
+
+                        <article class="row gy-3 mb-1">
+                            <div class="col-lg-6">
+                                <div class="itemside me-lg-5">
+                                    <div class="aside">Sản phẩm</div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group input-spinner">
+                                    <p type="text">Số lượng</p>
+                                </div> <!-- input-group.// -->
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-6">
+                                <p type="text" style="margin-left:80px">Giá</p>
+                            </div>
+
+                        </article>
+                        {% for cart_item in cart_items %}
+                        <article class="row gy-3 mb-4">
+                            <div class="col-lg-6">
+                                <div class="itemside me-lg-5">
+                                    <div class="aside"><img src="{{cart_item.product.img.url}}"
+                                            class="img-sm border rounded"></div>
+                                    <div class="info"> <a href="{{cart_item.product.get_url}}"
+                                            class="title mb-1">{{cart_item.product.product_name}}
+                                        </a>
+                                        {% for variation in cart_item.variations.all %}
+                                        <p class="text-muted small">
+                                            {{variation.variation_caterogy}}:{{variation.variation_value}}
+                                        </p>
+                                        <input type="hidden" class="text-muted" name="{{variation.variation_caterogy}}"
+                                            value="{{variation.variation_value}}">
+
+
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group input-spinner">
+
+
+
+                                    <input type="text" class="form-control" value="{{cart_item.quantity}}" readonly
+                                        style="background-color:white;border:none;margin-right:70px">
+                                </div> <!-- input-group.// -->
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-6">
+                                <div class="price-wrap lh-sm"> <var class="price h6">${{cart_item.sub_total}}</var>
+                                    <br> <small class="text-muted"> ${{cart_item.product.price}} / 1 số lượng </small>
+                                </div> <!-- price-wrap .// -->
+                            </div>
+
+                        </article> <!-- row.// -->
+                        {% endfor %}
+
+
+
+
+
+
+
+                    </div> <!-- card-body .// -->
+
+                </div> <!-- card.// -->
+            </div> <!-- col.// -->
+            <aside class="col-md-3">
+                {% include 'includes/alerts.html' %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'checkout' %}">
+                        {% csrf_token %}
+                             <label class="form-label">Mã khuyến mãi</label>
+                            <div class="input-group"> <input type="text" name="discount" class="form-control" placeholder="Nhập mã">
+                                <button class="btn btn-light" type="submit">Áp dụng</button> </div>
+                        </form>
+                        <p>Nhập mã : Huydeptrai để giảm 99%</p>
+                    </div> <!-- card-body.// -->
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Tạm tính:</dt>
+                            <dd class="text-end"> ${{price}}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Giảm giá:</dt>
+                            <dd class="text-end text-success"> - ${{discount}} </dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Thuế:</dt>
+                            <dd class="text-end text-danger"> + ${{tax}} </dd>
+                        </dl>
+                        <hr>
+                        <dl class="dlist-align">
+                            <dt>Tổng tiền:</dt>
+                            <dd class="text-end text-dark h5"> ${{total_price}} </dd>
+                        </dl>
+                        {% if user_profile.address %}
+                        <div id="paypal-button-container"></div>
+                        <p>Sử dụng tài khoản paypal này để mua</p>
+                        <p>tk: huy.personalsandbox@gmail.com</p>
+                        <p>mk: 123123123</p>
+
+                       
+                        {% endif %}
+                        <div class="d-grid gap-2 my-3">
+
+                            <a href="{% url 'home' %}" class="btn btn-primary w-100"> Tiếp tục mua sắm</a> </div>
+                    </div> <!-- card-body.// -->
+                </div> <!-- card.// -->
+            </aside> <!-- col.// -->
+        </div> <!-- row.// -->
+        <!-- =================== COMPONENT 2 CART+SUMMARY END .// ====================== --><br><br>
+
+        <!-- col.// -->
+    </div> <!-- row.// -->
+
+    <!-- container .// -->
+</section>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="{% url 'profile' %}" method="POST" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close btn btn-light" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                {% csrf_token %}
+                    <div class="row">
+                        <div >
+                            <div class="row gx-3">
+                                <div class="col-6 mb-3"> <label class="form-label">Họ</label> {{accountform.last_name}}</div>
+                                <!-- col .// -->
+                                <div class="col-6 mb-3"> <label class="form-label">Tên</label> {{accountform.first_name}} </div>
+                                <!-- col .// -->
+                                <div class="col-lg-6 col-md-6 mb-3"> <label class="form-label">Email</label>
+                                    <input class="form-control" type="email" placeholder="{{user_profile.user.email}}" disabled>
+                                </div> <!-- col .// -->
+                                <div class="col-lg-6 col-md-6 mb-3"> <label class="form-label">Số điện thoại</label>
+                                    {{accountform.phone}} </div>
+                                <!-- col .// -->
+                                <div class="col-lg-12 mb-3"> <label class="form-label">Địa chỉ</label>{{profileform.address}} </div>
+                                <!-- col .// -->
+                               
+                            </div> <!-- row.// -->
+                        </div> <!-- col.// -->
+                        
+                    </div> <!-- row.// --> <br> 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </form>
+    </div>
+  </div>
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    var total_price = "{{total_price}}"
+    var tax="{{tax}}"
+    var price="{{price}}"
+    var url = "{% url 'payment' %}"
+    var discount="{{discount}}"
+    var redirect_url="{% url 'order_complete' %}"
+    paypal.Buttons({
+        // Sets up the transaction when a payment button is clicked
+        createOrder: (data, actions) => {
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: total_price, // Can also reference a variable or function
+                    }
+                }]
+            });
+        },
+        // Finalize the transaction after payer approval
+        onApprove: (data, actions) => {
+            return actions.order.capture().then(function (orderData) {
+                // Successful capture! For dev/demo purposes:
+                console.log(orderData);
+                sendData();
+                function sendData(){
+                    fetch(url, {
+                        method: 'POST', // or 'PUT'
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrftoken,
+                        },
+                        body: JSON.stringify({
+                            payment_id: orderData.id,
+                            status: orderData.status,
+                            created_at: orderData.create_time,
+                            updated_at: orderData.update_time,
+                            total_price:total_price,
+                            price:price,
+                            tax:tax,
+                            discount:discount,
+                        }),
+                        
+                    })                  
+                    .then(response => response.json())
+                    .then(data => {
+                        window.location.href=redirect_url+'?payment_id='+data.payment_id;
+                        
+                    })}
+            });
+        }
+    }).render('#paypal-button-container');
+
+
+</script>
+{% endblock %}

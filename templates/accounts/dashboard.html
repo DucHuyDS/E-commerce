@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block title %}Thông tin{% endblock %}
+
+{% block content %}
+<section class="padding-y bg-light">
+    <div class="container">
+        {% include 'includes/alerts.html' %}
+        <!-- ========================= COMPONENT ACCOUNT 1 ========================= -->
+        
+        <!-- ========================= COMPONENT ACCOUNT 2 END.// ========================= --> <br> <br>
+        <!-- ========================= COMPONENT ACCOUNT 3 ========================= -->
+        <div class="row">
+            {% include 'includes/dashboard_slidebar.html' %}
+            <div class="col-lg-9">
+                <article class="card">
+                    <div class="card-body">
+				
+                        <figure class="icontext">
+                                <div class="icon">
+                                    <img class="rounded-circle img-sm border" src="{{user_profile.profile_picture.url}}">
+                                </div>
+                                <div class="text">
+                                    <strong> {{user_profile.user.full_name}}</strong> <br> 
+                                    <p class="mb-2"> {{user_profile.user.email}}  </p> 
+                                    <a href="{% url 'profile' %}" class="btn btn-light btn-sm">Edit</a>
+                                </div>
+                        </figure>
+                        <hr>
+                        <p>
+                            <i class="fa fa-map-marker text-muted"></i> &nbsp; Địa chỉ :  
+                             <br>
+                            {{user_profile.address}} &nbsp; 
+                          
+                        </p>
+        
+                        
+        
+                        <article class="card-group card-stat">
+                            <figure class="card bg">
+                                <div class="p-3">
+                                     <h4 class="title">{{payment_count}}</h4>
+                                    <span>Đơn hàng</span>
+                                </div>
+                            </figure>
+                           
+                            <figure class="card bg">
+                                <div class="p-3">
+                                     <h4 class="title">${{total}}</h4>
+                                    <span>Tổng chi tiêu</span>
+                                </div>
+                            </figure>
+                           
+                        </article>
+                        
+        
+                    </div>
+                </article> <!-- card .// -->
+            </div>
+        </div> <!-- row.// -->
+        <!-- =============== COMPONENT ACCOUNT 3 END.// ================= -->
+    </div> <!-- container .// -->
+</section>
+{% endblock %}

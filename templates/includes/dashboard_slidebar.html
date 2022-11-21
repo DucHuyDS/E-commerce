@@ -1,0 +1,17 @@
+<aside class="col-lg-3">
+    <!-- COMPONENT MENU LIST -->
+    <div class="card p-3 h-100">
+        <nav class="nav flex-column nav-pills"> 
+            <a class="nav-link {% if 'dashboard' in request.path %}active{% endif %}"href="{% url 'dashboard' %}">Thông tin</a> 
+            <a class="nav-link {% if 'profile' in request.path %}active{% endif %}"href="{% url 'profile' %}">Hồ sơ</a>
+            <a class="nav-link widget-header {% if 'my_order' in request.path %}active{% endif %}"href="{% url 'my_order' %}">Lịch sử mua hàng 
+            {% if request.user.notification > 0 %}
+            <span class="badge badge-pill badge-danger notify">{{user.notification}}</span>
+            {% endif %}
+            </a> 
+            
+            <a class="nav-link {% if 'change_password' in request.path %}active{% endif %}"href="{% url 'change_password' %}">Đổi mật khẩu</a> 
+            <a class="nav-link" href="{% url 'log_out' %}">Đăng xuất</a> 
+            </nav>
+    </div> <!-- COMPONENT MENU LIST END .// -->
+</aside>

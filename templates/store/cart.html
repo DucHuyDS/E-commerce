@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+
+{% block title %}Giỏ hàng{% endblock %}
+
+{% block content %}
+<section class="padding-y bg-light">
+    <div class="container">
+  
+        {% if not cart_items %}
+        <h2 class="text-center">Giỏ hàng của bạn trống</h2>
+        <div class="text-center" style="margin-top:6px">
+            <a href="{% url 'home' %}"><span class="btn btn-primary">Tiếp tục mua sắm</span></a>
+        </div>
+        {% else %}
+        <!-- ====================== COMPONENT 2 CART+SUMMARY ====================== -->
+
+        <div class="row">
+            <div class="col-lg-9">
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title mb-4">Giỏ hàng của tôi</h5>
+                        <article class="row gy-3 mb-1">
+                            <div class="col-lg-6">
+                                <div class="itemside me-lg-5">
+                                    <div class="aside" style="margin-left:20px">Sản phẩm</div>                                  
+                                </div>
+                            </div>
+                            <div class="col-auto">
+                                <div class="input-group input-spinner">                         
+                                    <p type="text"  >Số lượng</p>                                   
+                                </div> <!-- input-group.// -->
+                            </div>
+                            <div class="col-lg-2 col-sm-4 col-6">
+                                 <p type="text" style="margin-left:80px" >Giá</p>
+                            </div>
+                           
+                        </article> <!-- row.// -->
+                        {% for cart_item in cart_items %}
+                        <form action="{% url 'add_cart' cart_item.product.id %}" method="POST">
+                            {% csrf_token %}
+                            <article class="row gy-3 mb-4">
+                                <div class="col-lg-6">
+                                    <div class="itemside me-lg-5">
+                                        <div >
+                                        <input class="form-check-input" data-id="{{cart_item.product.id}}}" style="margin-right: 15px;margin-top:25px"  type="checkbox" {% if cart_item.is_active == True %}checked onchange="window.location.href='{% url 'inactive_cart_item' cart_item.id %}'"{% else %} onchange="window.location.href='{% url 'active_cart_item' cart_item.id %}'"{% endif %} >
+                                    </div>
+                                        <div class="aside"><img src="{{cart_item.product.img.url}}"
+                                                class="img-sm border rounded"></div>
+                                        <div class="info"> <a href="{{cart_item.product.get_url}}"
+                                                class="title mb-1">{{cart_item.product.product_name}}
+                                            </a>
+                                            {% for variation in cart_item.variations.all %}
+                                            <p class="text-muted small"> {{variation.variation_caterogy|capfirst}}:
+                                                {{variation.variation_value}}</p>
+                                            <input type="hidden" class="text-muted"
+                                                name="{{variation.variation_caterogy}}"
+                                                value="{{variation.variation_value}}">
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="input-group input-spinner">
+
+                                        <a href="{% url 'remove_cart_item' cart_item.product.id cart_item.id %}"
+                                            {% if cart_item.quantity == 1 %}
+                                            onclick="return confirm('Bạn có chắc xóa sản phẩm này không?')" {% endif %}
+                                            class="btn btn-light" type="button"> <i class="fa fa-minus"></i>
+
+                                        </a>
+
+                                        <input type="text" class="form-control" value="{{cart_item.quantity}}" >
+                                        <button type="submit" class="btn btn-light" {% if cart_item.quantity == cart_item.product.stock %}disabled {% endif %}><i class="fa fa-plus"></i></button> 
+                                    </div> <!-- input-group.// -->
+                                </div>
+                                <div class="col-lg-2 col-sm-4 col-6">
+                                    <div class="price-wrap lh-sm"> <var
+                                            class="price h6">${{cart_item.sub_total}}</var>
+                                        <br> <small class="text-muted"> ${{cart_item.product.price}} / 1 số lượng </small>
+                                    </div> <!-- price-wrap .// -->
+                                </div>
+                                <div class="col-lg col-sm-4">
+                                    <div class="float-lg-end"> <a href="{% url 'delete_cart_item' cart_item.product.id cart_item.id %}" onclick="return confirm('Bạn có chắc xóa mặt hàng này không?')"
+                                            class="btn btn-light text-danger">
+                                            Xóa</a> </div>
+                                </div>
+                            </article> <!-- row.// -->
+                        </form>
+                        {% endfor %}
+
+                    </div> <!-- card-body .// -->
+
+                </div> <!-- card.// -->
+            </div> <!-- col.// -->
+            <aside class="col-md-3">
+                {% include 'includes/alerts.html' %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <form method="POST" action="{% url 'cart' %}" >
+                        {% csrf_token %}
+                             <label class="form-label">Mã khuyến mãi</label>
+                            <div class="input-group"> <input type="text" name="discount" class="form-control" placeholder="Nhập mã">
+                                <button class="btn btn-light" type="submit">Áp dụng</button> </div>
+                        </form>
+                        <p>Nhập mã : Huydeptrai để giảm 99%</p>
+                    </div> <!-- card-body.// -->
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Tạm tính:</dt>
+                            <dd class="text-end"> ${{price}}</dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Giảm giá:</dt>
+                            <dd class="text-end text-success"> - ${{discount}} </dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>Thuế:</dt>
+                            <dd class="text-end text-danger"> + ${{tax}} </dd>
+                        </dl>
+                        <hr>
+                        <dl class="dlist-align">
+                            <dt>Tổng tiền:</dt>
+                            <dd class="text-end text-dark h5"> ${{total_price}} </dd>
+                        </dl>
+                        <div class="d-grid gap-2 my-3"> 
+                        </p> <button class="btn btn-primary mb-2 w-100" onclick="location.href='{% url 'checkout' %}'" {% if not cart_items_active %} disabled{% endif %}>Mua hàng</button>
+                        <a
+                           href="{% url 'home' %}" class="btn btn-light w-100"> Tiếp tục mua sắm </a> </div>
+                    </div> <!-- card-body.// -->
+                </div> <!-- card.// -->
+            </aside> <!-- col.// -->
+        </div> <!-- row.// -->
+        <!-- =================== COMPONENT 2 CART+SUMMARY END .// ====================== --><br><br>
+
+        </aside> <!-- col.// -->
+    </div> <!-- row.// -->
+    {% endif %}
+    </div> <!-- container .// -->
+</section>
+
+{% endblock %}

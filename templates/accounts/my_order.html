@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block title %}Đơn hàng của tôi{% endblock %} 
+
+{% block content %}
+<section class="padding-y bg-light">
+    <div class="container">
+        {% include 'includes/alerts.html' %}
+        <!-- ========================= COMPONENT ACCOUNT 1 ========================= -->
+        
+        <!-- ========================= COMPONENT ACCOUNT 2 END.// ========================= --> <br> <br>
+        <!-- ========================= COMPONENT ACCOUNT 3 ========================= -->
+        <div class="row">
+            {% include 'includes/dashboard_slidebar.html' %}
+            <main class="col-md-9">
+
+                <article class="card mb-4">
+                <header class="card-header">
+                   
+                    <strong class="d-inline-block mr-3">Lịch sử mua hàng</strong>
+                    
+                   
+                    
+                </header>
+                
+               
+                <table class="table table-hover">
+                    <thead>
+                        
+                        <tr>
+                         
+                          <th class="header headerSortDown">Mã đơn hàng</th>
+                          <th class="header">Tên khách hàng</th>
+                          <th class="header">Số điện thoại</th>
+                          <th class="header">Ngày đặt</th>
+                          <th class="header">Tổng</th>
+                          <th class="header">Đánh giá</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {% for contact in contacts %}
+                        <tr>
+
+                            <td><a href="{% url 'order_details' contact.payment.payment_id  %}">#{{contact.payment.payment_id}}</a></td>
+                          <td>{{contact.full_name}}</td>
+                          <td>{{contact.phone}}</td>
+                          <td>{{contact.payment.created_at}}</td>
+                          <td>${{contact.payment.total_price}}</td>
+                          <td><a href="{{contact.payment.order_set.get.product.get_url}}">Viết</a></td>
+                        </tr>
+                        {% endfor %}
+                       </tbody>
+                </table>
+          
+                </article> <!-- card order-item .// -->
+        
+        
+                <footer class="d-flex mt-4">
+
+                    <nav class="ms-3">
+                      <ul class="pagination">
+                        {% if contacts.has_other_pages %}
+                        {% if contacts.has_previous %}
+                        <div>
+                          <a class="page-link" href="?page={{contacts.previous_page_number }}"><</a>
+                        </div>
+                        {% else %}
+                          <button class="btn btn-light" disabled><</button>
+                        {% endif %}
+                        {% for i in contacts.paginator.page_range %} 
+                        {% if i == contacts.number   %}
+                        <li class="page-item active"><a
+                                class="page-link" href="?page={{i}}">{{i}}</a>
+                              </li>
+                        {% else %}
+                        <li class="page-item"><a
+                          class="page-link" href="?page={{i}}">{{i}}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+                        <!-- <li class="page-item active" aria-current="page">
+                          <span class="page-link">2</span>
+                        </li> -->
+                        {% if contacts.has_next  %}
+                        <div>
+                          <a class="page-link" href="?page={{contacts.next_page_number }}">></a>
+                        </div>
+                      </ul>
+                    </nav>
+                    {% else %}
+                      <button class="btn btn-light" disabled>></button>
+                    {% endif %}
+                    {% endif %}
+                  </footer>
+        
+            </main>
+        </div> <!-- row.// -->
+        <!-- =============== COMPONENT ACCOUNT 3 END.// ================= -->
+    </div> <!-- container .// -->
+</section>
+
+{% endblock %}

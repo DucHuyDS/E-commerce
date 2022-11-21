@@ -1,0 +1,74 @@
+<div class="container">
+
+    <div class="row gx-3">
+        <!-- <main class="col-lg-12"> -->
+        <!-- <article class="" > -->
+
+        <div id="carouselRecommenderDetail" 
+            {% if product_recommend|length > 4 %}class="carousel slide" data-bs-ride="carousel" data-interval="4000" {% endif %}>
+
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row">
+                        {% for product in product_recommend|slice:":4" %}
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <figure class="card-product-grid">
+                                <a href="{{product.get_url}}" class="img-wrap rounded bg-gray-light">
+                                    <img height="250" class="mix-blend-multiply" src="{{product.img.url}}">
+                                </a>
+                                <figcaption class="pt-2">
+                                    
+                                    <strong class="price" style="color:orange">${{product.price}}</strong>
+                                    <a href="{{product.get_url}}"
+                                        class="title text-truncate">{{product.product_name}}</a>
+                                    <small class="text-muted">Thương hiệu: {{product.brand.brand_name}}</small>
+                                </figcaption>
+                            </figure>
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row">
+                        {% for product in product_recommend|slice:"4:8" %}
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <figure class="card-product-grid">
+                                <a href="{{product.get_url}}" class="img-wrap rounded bg-gray-light">
+                                    <img height="250" class="mix-blend-multiply" src="{{product.img.url}}">
+                                </a>
+                                <figcaption class="pt-2">
+                                  
+                                    <strong class="price" style="color:orange">${{product.price}}</strong>
+                                    <a href="{{product.get_url}}"
+                                        class="title text-truncate">{{product.product_name}}</a>
+                                    <small class="text-muted">Thương hiệu: {{product.brand.brand_name}}</small>
+                                </figcaption>
+                            </figure>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+            {% if product_recommend|length > 4 %}
+            <a class="carousel-control-prev" data-bs-target="#carouselRecommenderDetail" role="button"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </a>
+            <a class="carousel-control-next" data-bs-target="#carouselRecommenderDetail" role="button"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next </span>
+            </a>
+                {% endif %}
+        </div>
+
+        <!-- </article> -->
+        <!-- </main> -->
+
+    </div>
+    <!-- row //end -->
+
+</div>

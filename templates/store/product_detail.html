@@ -1,0 +1,454 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% endblock %}
+{% block content  %}
+
+<section class="padding-y bg-white shadow-sm">
+    <div class="container">
+        <div>
+
+            <h5 style="margin-bottom:20px"> <a href="{% url 'home' %}">Trang chủ </a> -> <a
+                    href="{% url 'category_slug' product.category.slug %}">{{product.category.category_name}} </a> -> <a
+                    href="{% url 'category_slug' product.category.slug %}?brand={{product.brand.brand_name}}">{{product.brand.brand_name}}</a>->
+                {{product.product_name}}</h5>
+        </div>
+        <div class="row">
+            <aside class="col-lg-6">
+                <article class="gallery-wrap gallery-vertical mainImage">
+                    <!-- class="img-big-wrap img-thumbnail bg-light" -->
+
+                    <div id="carouselExampleIndicators" class="carousel slide img-big-wrap img-thumbnail bg-light"
+                        data-bs-ride="carousel" data-interval="2000">
+
+                        <div class="carousel-inner" style="width:100%;height:100%">
+                            <div class="carousel-item active" style="width:100%;height:100%">
+                                <img class="d-block w-100" style="width:100%;height:100%" src="{{product.img.url}}"
+                                    alt="First slide">
+                            </div>
+                            {% for product_gallery in product_galleries %}
+                            <div class="carousel-item" style="width:100%;height:100%">
+                                <img class="d-block w-100" style="width:100%;height:100%"
+                                    src="{{product_gallery.img.url}}" alt="Second slide">
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% if product_galleries %}
+                        <a class="carousel-control-prev" data-bs-target="#carouselExampleIndicators" role="button"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"
+                                style="background-color:orange;margin-top: 200px;"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </a>
+
+                        <a class="carousel-control-next" data-bs-target="#carouselExampleIndicators" role="button"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"
+                                style="background-color:orange;margin-top: 200px;"></span>
+                            <span class="visually-hidden">Next</span>
+                        </a>
+                        {% endif %}
+                    </div>
+                    <!-- img-big-wrap.// -->
+
+                    <!-- thumbs-wrap.// -->
+                </article> <!-- gallery-wrap .end// -->
+            </aside>
+            <div class="col-lg-6">
+                {% include 'includes/alerts.html' %}
+                <form method="POST" action="{% url 'add_cart' product.id  %}">
+                    {% csrf_token %}
+                    <article class="ps-lg-3">
+                        <h4 class="title text-dark">{{product.product_name}} </h4>
+                        <div class="rating-wrap my-3">
+
+                            <div class="rating-star">
+                                <span>
+
+
+                                    <i class="fa fa-star{% if product.average_rating < 0.5 %}-o{% elif product.average_rating >= 0.5 and product.average_rating < 1 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 1.5 %}-o{% elif product.average_rating >= 1.5 and product.average_rating < 2 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 2.5 %}-o{% elif product.average_rating >= 2.5 and product.average_rating < 3 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 3.5 %}-o{% elif product.average_rating >= 3.5 and product.average_rating < 4 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 4.5 %}-o{% elif product.average_rating >= 4.5 and product.average_rating < 5 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                </span>
+                                <b class="text-warning"> {{product.average_rating}}</b>
+
+                                <span class="label-rating text-muted"> <i class="fa fa-comment"></i>
+                                    {{product.count_rating}} đánh giá </span> <span class="label-rating text-muted"> <i
+                                        class="fa fa-shopping-basket"></i> {{product.sold}} đã bán</span>
+                                <span class="label-rating text-muted">Thương hiệu: {{product.brand}} </span>
+                            </div>
+                        </div> <!-- rating-wrap.// -->
+                        <hr>
+
+                        {{product.description|linebreaks }}
+
+
+                        {%if product.variation_set.colors %}
+                        <div class="mb-3"> <label class="text-muted mb-2">Chọn Màu</label>
+                            <div>
+                                {% for variation in product.variation_set.colors %}
+                                <label class="checkbox-btn"> <input type="radio" name="{{variation.variation_caterogy}}"
+                                        value="{{variation.variation_value}}" required> <span class="btn btn-light">
+                                        {{variation.variation_value}} </span> </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        {% if product.variation_set.sizes %}
+                        <div class="mb-3"> <label class="text-muted mb-2">Chọn cỡ: </label>
+                            <div>
+                                {% for variation in product.variation_set.sizes %}
+                                <label class="checkbox-btn"> <input type="radio" name="{{variation.variation_caterogy}}"
+                                        value="{{variation.variation_value}}" required> <span class="btn btn-light">
+                                        {{variation.variation_value}} </span> </label>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+                        <!-- 
+    
+    
+ -->
+                        {% if product_series %}
+                        <div class="mb-3"> <label class="text-muted mb-2">Chọn Phân khúc</label>
+                            <div>
+                                {% for product in product_series %}
+
+                                <label class="checkbox-btn"><a
+                                        href="{% url 'product_detail' product.category.slug product.slug %}"><input
+                                            type="radio" name="radanswer" {% if product.slug in request.path  %}
+                                            checked{% endif %}> <span class="btn btn-light">
+                                            {{product.config}} </span></a> </label>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        {% endif %}
+
+
+
+
+
+
+
+
+                        <div class="mb-4"> <var class="price h5">${{product.price}}</var>
+                        </div>
+                        <!-- price-wrap.// -->
+                        <span>Số lượng </span>
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="input-group" style="max-width:140px"> <button class="btn btn-icon btn-light"
+                                    type="button" id="minus" {% if product.stock <= 1 %}disabled{% endif %}> <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                        height="24" fill="#999" viewBox="0 0 24 24">
+                                        <path d="M19 13H5v-2h14v2z"></path>
+                                    </svg> </button> <input class="form-control text-center" placeholder name="quantity"
+                                    value="1" id="input">
+                                <button class="btn btn-icon btn-light" type="button" id="plus" {% if product.stock <= 1 %}disabled{% endif %}> <svg
+                                        xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="#999"
+                                        viewBox="0 0 24 24">
+                                        <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"></path>
+                                    </svg> </button> 
+                                </div> <!-- input-group.// -->
+                            {% if product.stock >= 1 %}
+                            <span class="p-2">Còn lại: {{product.stock}}</span>
+                            {% else %}
+                            <span class="p-2" style="color:red"> Hết hàng</span>
+                            {% endif %}
+                        </div>
+                        <div class="row gx-2 mb-4">
+                            <!-- col.// -->
+                       
+                            <button id="buy" type="submit" class="btn  btn-warning" style="width:20%;margin-right: 5px;"
+                                formaction="{% url 'add_cart' product.id product.slug %}"{% if product.stock == 0 %}disabled{% endif %}><span class="text">Mua
+                                    ngay </span></button>
+                            <button id="addcart" type="submit" class="btn  btn-primary" style="width:20%;margin-right: 5px;" {% if product.stock == 0 %}disabled{% endif %}><span
+                                    class="text">Thêm vào giỏ </span></button>
+   
+
+                        </div> <!-- col.// -->
+
+            </div> <!-- row.// -->
+            </form>
+            </article>
+        </div> <!-- col.// -->
+    </div> <!-- row.// -->
+    </div> <!-- container .// -->
+</section>
+<section class="padding-y bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <!-- ================ COMPONENT COMPARE ================== -->
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Chi tiết</h5>
+                        <hr> <!-- item-row -->
+
+                        {{product.content|truncatewords:200|safe}}
+                        {% if product.content|wordcount > 200  %}
+
+                        <div>
+                            <div class="container text-center">
+                                <button type="button" class="btn btn-primary btn-round " data-toggle="modal"
+                                    data-target="#loginModal">
+                                    Đọc thêm
+                                </button>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="modal fade" id="loginModal" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalLabel" style="display: none  " aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header border-bottom-0" style="width:4500px">
+                                        <button type="button" class="close btn btn-warning" data-dismiss="modal"
+                                            aria-label="Close">
+                                            <span aria-hidden="true">×</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="form-title text-center">
+                                            <h4>Thông tin</h4>
+                                        </div>
+                                        <div class="d-flex flex-column text-center">
+                                            {{product.content|safe}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                    </div>
+                </div> <!-- =================== COMPONENT COMPARE .// ================== -->
+            </div> <!-- col.// -->
+
+        </div> <!-- row .// --><br><br>
+
+</section>
+<section class="padding-y bg-light">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <!-- =================== COMPONENT REVIEW ====================== -->
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <h5 class="card-title">Đánh giá </h5>
+                        <hr>
+                        {% if not reviewratings %}
+                        <h3 class="text-center">Hãy là người đánh giá đầu tiên</h3>
+                        {% else %}
+                        {% for reviewrating in reviewratings %}
+                        <blockquote class="border-bottom">
+                            <!-- <div class="float-lg-end d-flex mb-3">
+                                <div class="btn-group d-inline-flex me-2"> <button
+                                        class="btn btn-light btn-sm float-end" data-bs-toggle="tooltip"
+                                        data-bs-title="Like"> <i class="fa fa-thumbs-up"></i> </button> <button
+                                        class="btn btn-light btn-sm float-end" data-bs-toggle="tooltip"
+                                        data-bs-title="Dislike"> <i class="fa fa-thumbs-down"></i> </button> </div>
+                                <button class="btn btn-light btn-sm float-end "> <i class="fa fa-ellipsis-v"></i>
+                                </button>
+                            </div> -->
+                            <div class="icontext"> <img
+                                    src="{{reviewrating.user.accountprofile_set.get.profile_picture.url}}"
+                                    class="img-xs icon rounded-circle">
+                                <div class="text">
+                                    <h6 class="mb-0"> {{reviewrating.user.full_name}} </h6>
+                                    <div class="rating-wrap">
+                                        <ul class="rating-star" style="padding-left:0">
+                                            <span>
+
+
+                                                <i class="fa fa-star{% if reviewrating.rating < 0.5 %}-o{% elif reviewrating.rating >= 0.5 and reviewrating.rating < 1 %}-half{% endif %}"
+                                                    aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if reviewrating.rating < 1.5 %}-o{% elif reviewrating.rating >= 1.5 and reviewrating.rating < 2 %}-half{% endif %}"
+                                                    aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if reviewrating.rating < 2.5 %}-o{% elif reviewrating.rating >= 2.5 and reviewrating.rating < 3 %}-half{% endif %}"
+                                                    aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if reviewrating.rating < 3.5 %}-o{% elif reviewrating.rating >= 3.5 and reviewrating.rating < 4 %}-half{% endif %}"
+                                                    aria-hidden="true"></i>
+                                                <i class="fa fa-star{% if reviewrating.rating < 4.5 %}-o{% elif reviewrating.rating >= 4.5 and reviewrating.rating < 5 %}-half{% endif %}"
+                                                    aria-hidden="true"></i>
+
+
+                                            </span>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div> <!-- icontext.// -->
+                            <h5>{{reviewrating.title}}</h5>
+                            <div class="mt-3">
+                                <p> {{reviewrating.description}} </p>
+                            </div>
+                            <div class style="text-align:right">
+                                <small class="label-rating text-muted"> Đánh giá vào {{reviewrating.updated_at}}
+                                </small>
+                            </div>
+                        </blockquote>
+
+                        {% endfor %}
+                        {% endif %}
+                    </div>
+                </div><!-- =================== COMPONENT REVIEW .// ================== -->
+                <!-- =================== COMPONENT REVIEW ====================== -->
+
+            </div> <!-- col.// -->
+            <div class="col-lg-4">
+                <!-- =================== COMPONENT SELLER ====================== -->
+                <article class="card">
+
+                    <div class="card-body">
+
+
+
+                        <h5 class="card-title">Đánh giá </h5>
+                        <div class="rating-wrap mt-3">
+
+                            <ul class="rating-star" style="padding-left:0">
+                                <span>
+
+
+                                    <i class="fa fa-star{% if product.average_rating < 0.5 %}-o{% elif product.average_rating >= 0.5 and product.average_rating < 1 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 1.5 %}-o{% elif product.average_rating >= 1.5 and product.average_rating < 2 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 2.5 %}-o{% elif product.average_rating >= 2.5 and product.average_rating < 3 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 3.5 %}-o{% elif product.average_rating >= 3.5 and product.average_rating < 4 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+                                    <i class="fa fa-star{% if product.average_rating < 4.5 %}-o{% elif product.average_rating >= 4.5 and product.average_rating < 5 %}-half-o{% endif %}"
+                                        aria-hidden="true"></i>
+
+
+                                </span>
+                                <b class="label-rating text-lg"> {{product.average_rating}}/5.0 </b>
+                            </ul>
+                        </div> <!-- rating-wrap.// -->
+                        <p class="mt-1 text-muted">Có {{product.count_rating}} lượt đánh giá cho sản phẩm này</p>
+                        <table class="table table-borderless table-sm">
+                            <tbody>
+                                {% for i in list_rate %}
+                                <tr valign="middle" class="rating-star">
+                                    <td width="50"> {{forloop.counter}} sao </td>
+                                    <td>
+
+                                        <i class="fa fa{% if forloop.counter >= 1  %}-star {% endif %}"
+                                            aria-hidden="true"></i>
+                                        <i class="fa fa{% if forloop.counter >= 2 %}-star {% endif %}"
+                                            aria-hidden="true"></i>
+                                        <i class="fa fa{% if forloop.counter >= 3  %}-star {% endif %}"
+                                            aria-hidden="true"></i>
+                                        <i class="fa fa{% if forloop.counter >= 4  %}-star {% endif %}"
+                                            aria-hidden="true"></i>
+                                        <i class="fa fa{% if forloop.counter >= 5  %}-star {% endif %}"
+                                            aria-hidden="true"></i>
+
+                                    </td>
+                                    <td width="200"> {{i}} lượt đánh giá</td>
+                                </tr>
+                                {% endfor %}
+
+                            </tbody>
+                        </table>
+                        {% if order is None %}
+                        <a href="#">
+                            <h5 class="btn w-100 btn-primary-light">Hãy mua sản phẩm để đánh giá</h5>
+                        </a>
+                        {% else %}
+                        <form action="{% url 'reviewrating' product.id %}" method="POST">
+                            {% csrf_token %}
+                            <h5>Viết đánh giá</h5>
+
+
+                            <div>
+                                <!-- Rating stars -->
+                                <label>Hãy cho mọi người biết ý kiến của bạn?</label>
+                                <br>
+                                <div class="rate">
+                                    <input type="radio" name="rating" id="rating10" value="5" required><label
+                                        for="rating10" title="5"></label>
+                                    <input type="radio" name="rating" id="rating8" value="4" required><label
+                                        for="rating8" title="4"></label>
+                                    <input type="radio" name="rating" id="rating6" value="3" required><label
+                                        for="rating6" title="3"></label>
+                                    <input type="radio" name="rating" id="rating4" value="2" required><label
+                                        for="rating4" title="2"></label>
+                                    <input type="radio" name="rating" id="rating2" value="1" required><label
+                                        for="rating2" title="1"></label>
+                                </div>
+                                <br>
+                                Tiêu đề:
+                                <input type="text" class="form-control" name="title">
+                                <br>
+                                Nội dung:
+                                <textarea name="description" rows="4" class="form-control"></textarea>
+                                <br>
+
+                            </div>
+
+                            <button type="submit" class="btn w-100 btn-primary-light">Đăng đánh giá</butt>
+                        </form>
+                        {% endif %}
+                    </div>
+                </article><!-- =================== COMPONENT SELLER .// ================== -->
+            </div> <!-- col.// -->
+        </div> <!-- row .// -->
+    </div> <!-- container .// -->
+</section>
+<section class="padding-y">
+    <div class="container">
+
+        <header class="section-heading">
+            <h3 class="section-title">Sản phẩm liên quan</h3>
+        </header>
+
+        {% include 'includes/recommend.html' %}
+    </div>
+</section>
+
+<script>
+    const minusButton = document.getElementById('minus');
+    const plusButton = document.getElementById('plus');
+    const inputField = document.getElementById('input');
+    const buyBtn= document.getElementById('buy')
+    const addcartBtn=document.getElementById('addcart')
+
+    minusButton.addEventListener('click', event => {
+        event.preventDefault();
+        const currentValue = Number(inputField.value)- 1;
+        inputField.value = currentValue;
+        if (currentValue < 1 ) {
+            minusButton.disabled = true;
+            buyBtn.disabled = true;
+            addcartBtn.disabled = true;
+            plusButton.disabled = false;
+        } else {
+            plusButton.disabled = false;
+        }
+
+    });
+
+    plusButton.addEventListener('click', event => {
+        event.preventDefault();
+        const currentValue = Number(inputField.value) +1;
+        inputField.value = currentValue ;
+        buyBtn.disabled = false;
+        addcartBtn.disabled = false;
+        minusButton.disabled = false;
+        if (currentValue  == "{{product.stock}}") {
+            plusButton.disabled = true
+        }
+        else{
+            plusButton.disabled = false
+        }
+    });
+</script>
+{% endblock %}

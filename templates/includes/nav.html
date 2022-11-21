@@ -1,0 +1,62 @@
+{% load static %}
+<header class="section-header" style="background-color: rgb(26, 148, 255)">	
+	<section class="header-main">
+		<div class="container">
+			<div class="row gy-3 align-items-center">
+				<div class="col-lg-2 col-sm-4 col-4">
+					<a href="" class="navbar-brand">
+						<img class="logo" height="40" src="{% static 'images/logo.svg' %}">
+					</a> <!-- brand end.// -->
+				</div>
+				<div class="order-lg-last col-lg-5 col-sm-8 col-8" style="left:0">
+					<div class="float-end">
+						{% if request.user.is_authenticated  %}
+						
+						
+						<!-- <a href="{% url 'dashboard' %}" class="btn btn-light"> 
+							<i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Thông tin</span> 
+						</a> -->
+						<a href="{% url 'dashboard' %}" class="btn btn-light widget-header pl-3 ml-3"> 
+							<i class="fa fa-user"></i> <span class="ms-1">Thông tin</span> 
+							{% if request.user.notification > 0 %}
+							<span class="badge badge-pill badge-danger notify">{{user.notification}}</span>
+							{% endif %}
+						</a>
+						<a href="{% url 'log_out' %}" class="btn btn-light"> 
+							<i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng xuất</span> 
+							
+						</a>
+						{% else %}
+						<a href="{% url 'log_in' %}" class="btn btn-light"> 
+							<i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng nhập</span>   
+						</a>
+						<a href="{% url 'register' %}" class="btn btn-light"> 
+							<i class="fa fa-user"></i>  <span class="ms-1 d-none d-sm-inline-block">Đăng ký</span>   
+						</a>
+						{% endif %}
+						<a href="{% url 'cart' %}" class="btn btn-light widget-header pl-3 ml-3"> 
+							<i class="fa fa-shopping-cart"></i> <span class="ms-1">Giỏ hàng</span> 
+							<span class="badge badge-pill badge-danger notify">{{cart_count}}</span>
+						</a>
+					
+			        </div>
+				</div> <!-- col end.// -->
+				<div class="col-lg-5 col-md-12 col-12">
+					<form action="{% url 'search' %}" method="GET">
+		              <div class="input-group">
+		                <input type="search" class="form-control" style="width:55%" placeholder="Tìm kiếm" name="keyword">
+		                <button class="btn btn-primary" type="submit"> <i class="fa fa-search"></i> </button>
+						<a href="{% url 'home' %}">
+						<div class="btn btn-primary" style="margin-left:5px"> Home </div>
+					</a>
+		              </div> <!-- input-group end.// -->
+					  
+		            </form>
+				</div> <!-- col end.// -->
+				
+			</div> <!-- row end.// -->
+		</div> <!-- container end.// -->
+	</section> <!-- header-main end.// -->
+
+	 <!-- navbar end.// -->
+</header> <!-- section-header end.// -->

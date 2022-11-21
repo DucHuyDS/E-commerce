@@ -1,0 +1,90 @@
+{% extends 'base.html' %}
+{% block title %}Xác minh{% endblock %}
+
+{% block content %}
+<section class="padding-y bg-light">
+    <div class="container" style="width: 50%;">
+        <div class="row gy-6" s>
+            <!-- col end.// -->
+            <aside class="">
+                <!-- ==============COMPONENT LOGIN 3 ============== -->
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="mb-4">Xác thực Email</h4>
+                        {% include 'includes/alerts.html' %}
+                        <form action="{% url 'verify_email' %}" method="GET">
+                            {% csrf_token %}
+                            <div class="row gx-3">
+                                <div class="col mb-4" name="code"> <label class="form-label"></label>Nhập mã đã gửi
+                                    tới: {{user.email}} <input type="text" class="box" style="margin-right:5px"
+                                        name="code">
+                                    <button type="submit" class="btn btn-primary">Xác nhận</button>
+
+                                </div>
+                                <!-- col end.// -->
+                            </div> <!-- row end.// -->
+                        </form> <!-- form end.// -->
+                        <div class="text-center">
+                            <div style="color:red">Hết hạn sau <span id="time"></span></div>
+                            <button id="button" class="btn btn-warning" onclick="send()">Gửi lại</button>
+
+                        </div>
+
+                    </div> <!-- card-body end.// -->
+                </div> <!-- card end.// -->
+                <!-- ============== COMPONENT LOGIN 3 END.// ============== -->
+            </aside> <!-- col end.// -->
+        </div> <!-- row end.// --> <br><br>
+        <!-- row end.// -->
+    </div> <!-- container end.// -->
+</section>
+
+<script>
+    const button = document.querySelector('#button')
+
+
+    function startTimer(time) {
+        var seconds = time,
+            $seconds = document.querySelector('#time');
+        (function countdown() {
+            $seconds.textContent = seconds +'s'
+            if (seconds-- > 0) {
+                setTimeout(countdown, 1000)
+            }
+            else{
+                button.disabled = false
+            }
+        })();
+    }
+    window.onload = function () {
+        if ("{{time_remaining}}" <= 0) {
+            button.disabled = false
+            var fiveMinutes = 0;
+
+        } else {
+            button.disabled = true
+            var fiveMinutes = "{{time_remaining}}";
+        }
+        startTimer(fiveMinutes);
+    };
+
+    function send(e) {
+        $this = $(this)
+        $.ajax({
+            url: "{% url 'resend_verify_email' %}",
+            beforeSend: function () {
+                button.disabled = true
+                button.innerHTML = `<div class="spinner-border" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>`
+            },
+            success: function () {
+                startTimer('60')
+                button.innerHTML='Gửi lại'
+
+            }
+
+        })
+    }
+</script>
+{% endblock %}
